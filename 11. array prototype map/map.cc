@@ -40,7 +40,7 @@ void Map(const FunctionCallbackInfo<Value>& args)
         a[1] = Int32::New(isolate, i);
 
         MaybeLocal<Value> v = func->Call(context, null, 3, a);
-        ret->Set(i, v.ToLocalChecked());
+        ret->Set(context, i, v.ToLocalChecked());
     }
 
     args.GetReturnValue().Set(ret);
@@ -52,8 +52,9 @@ void Init(Local<Object> exports, Local<Object> module)
     HandleScope scope(isolate);
 
     module->Set(
+            isolage->GetCurrentContext(),
             String::NewFromUtf8(isolate, "exports"),
-            FunctionTemplate::New(isolate, Map)->GetFunction());
+            FunctionTemplate::New(isolate, Map)->GetFunction(isolate->GetCurrentContext()));
 }
 
 NODE_MODULE(_template, Init)

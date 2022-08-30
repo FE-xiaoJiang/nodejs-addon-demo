@@ -1,0 +1,15 @@
+{
+  "name": "nodeapi-object",
+  "version": "1.0.0",
+  "description": "node addon api demo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bindings": "~1.2.1",
+    "node-addon-api": "^3.0.0"
+  },
+  "author": "keanjiang",
+  "license": "ISC"
+}

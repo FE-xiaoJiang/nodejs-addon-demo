@@ -23,7 +23,7 @@ void init(Local<Object> exports)
     Isolate* isolate = Isolate::GetCurrent();
     HandleScope scope(isolate);
     Local<FunctionTemplate> t = FunctionTemplate::New(isolate, Method);
-    Local<Function> fn = t->GetFunction();
+    Local<Function> fn = t->GetFunction(isolate->GetCurrentContext()).ToLocalChecked();
     Local<String> name = String::NewFromUtf8(isolate, "funcCreateByTemplate");
     fn->SetName(name);
     exports->Set(name, fn);

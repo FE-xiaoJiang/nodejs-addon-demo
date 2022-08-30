@@ -11,7 +11,7 @@ using v8::Value;
 
 void Method(const FunctionCallbackInfo<Value>& args)
 {
-    Isolate* isolate = args.GetIsolate();
+    Isolate* isolate = Isolate::GetCurrent(); //args.GetIsolate();
     args.GetReturnValue().Set(String::NewFromUtf8(isolate, "first build"));
 }
 

@@ -32,7 +32,7 @@ void Add(const FunctionCallbackInfo<Value>& args) {
 
   // 计算第一个参数加第二个参数的 `double` 值
   // 并新生成一个 Local<Number> 句柄，将计算出来的 `double` 传入
-  double value = args[0]->NumberValue() + args[1]->NumberValue();
+  double value = args[0]->NumberValue((*isolate).GetCurrentContext()).ToChecked() + args[1]->NumberValue(isolate->GetCurrentContext()).ToChecked();
   Local<Number> num = Number::New(isolate, value);
 
   // 设置返回值为新生成的 `num`

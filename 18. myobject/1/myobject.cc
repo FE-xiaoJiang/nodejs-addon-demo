@@ -20,17 +20,17 @@ void MyObject::Init(Local<Object> exports)
     Isolate* isolate = exports->GetIsolate();
     
     Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-    tpl->SetClassName(String::NewFromUtf8(isolate, "MyObject"));
+    tpl->SetClassName(String::NewFromUtf8(isolate, "MyObject", v8::NewStringType::kNormal).ToLocalChecked());
     tpl->InstanceTemplate()->SetInternalFieldCount(1);
     
     NODE_SET_PROTOTYPE_METHOD(tpl, "plusOne", PlusOne);
     
-    exports->Set(String::NewFromUtf8(isolate, "MyObject"), tpl->GetFunction());
+    exports->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "MyObject"), tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 }
 
 void MyObject::New(const FunctionCallbackInfo<Value>& args)
 {
-    double value = args[0]->IsUndefined() ? 0 : args[0]->NumberValue();
+    double value = args[0]->IsUndefined() ? 0 : args[0]->NumberValue(args.GetIsolate()->GetCurrentContext()).ToChecked();
     MyObject* obj = new MyObject(value);
     obj->Wrap(args.This());
     

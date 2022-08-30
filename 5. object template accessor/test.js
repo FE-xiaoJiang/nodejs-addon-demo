@@ -8,5 +8,5 @@
 const m = require("./build/Release/accessor");
 
 console.log(m.var3);
-m.var3 = 2333;
-console.log(m.var3);
+// m.var3 = 2333;
+console.log(m);

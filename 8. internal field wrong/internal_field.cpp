@@ -48,6 +48,7 @@ void Init(Local<Object> exports, Local<Object> module)
 {
     Isolate* isolate = Isolate::GetCurrent();
     HandleScope scope(isolate);
+    Local<v8::Context> context = isolate->GetCurrentContext();
 
     Local<ObjectTemplate> templ = ObjectTemplate::New(isolate);
     templ->SetInternalFieldCount(1);
@@ -58,14 +59,14 @@ void Init(Local<Object> exports, Local<Object> module)
     person->gender = Gender::FEMALE;
     person->age = 495;
 
-    MaybeLocal<Object> dummy_obj = templ->NewInstance();
+    MaybeLocal<Object> dummy_obj = templ->NewInstance(context);
     Local<Object> obj = dummy_obj.ToLocalChecked();
 
     // 假设 obj 肯定不为空
 
     obj->SetInternalField(0, External::New(isolate, person));
-    obj->Set((MaybeLocal<String>(String::NewFromUtf8(isolate, "getSummary"))).ToLocalChecked(),
-            FunctionTemplate::New(isolate, GetSummary)->GetFunction());
+    obj->Set(context, (MaybeLocal<String>(String::NewFromUtf8(isolate, "getSummary"))).ToLocalChecked(),
+            FunctionTemplate::New(isolate, GetSummary)->GetFunction(context).ToLocalChecked());
 
     module->Set(String::NewFromUtf8(isolate, "exports"), obj);
 }

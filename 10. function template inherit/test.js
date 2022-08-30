@@ -1,0 +1,5 @@
+let A = require('./build/Release/inherit')
+console.log(A)
+let pet = new A.Pet()
+pet.setName("xxx", "yyy")
+console.log(pet)

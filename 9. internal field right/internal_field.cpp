@@ -33,7 +33,7 @@ void WeakCallback(const v8::WeakCallbackInfo<PersistentWrapper>& data)
     }
 
     printf("deleting 0x%.8X: %d...", wrapper, wrapper->value); // NOLINT
-    wrapper->persistent.Reset();
+    wrapper->persistent.Reset(data->GetIsolate());
     delete wrapper;
     printf("ok\n");
 }
@@ -49,7 +49,7 @@ void CreateObject(const FunctionCallbackInfo<Value>& args)
     // 新建对象以及设置内置字段
     PersistentWrapper* wrapper = new PersistentWrapper();
     wrapper->value = args[0]->ToNumber()->Int32Value();
-    Local<Object> obj = templ->NewInstance();
+    Local<Object> obj = templ->NewInstance(isolate->GetCurrentContext());
     obj->SetInternalField(0, External::New(isolate, wrapper));
 
     // 基于 obj 新建持久句柄

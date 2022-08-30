@@ -145,7 +145,7 @@ void Init(Local<Object> exports, Local<Object> module)
     // 动态变量
     tpl->SetAccessor(String::NewFromUtf8(isolate, "var3"), Getter3, Setter3);
 
-    Local<Object> ret = ((MaybeLocal<Object>)tpl->NewInstance()).ToLocalChecked();
+    Local<Object> ret = ((MaybeLocal<Object>)tpl->NewInstance(isolate->GetCurrentContext())).ToLocalChecked();
     TestExternal* ex = new TestExternal(ret);
     ret->SetInternalField(0, External::New(isolate, ex));
 

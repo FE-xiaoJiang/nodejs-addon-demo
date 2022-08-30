@@ -19,7 +19,7 @@ void RunCallback(const FunctionCallbackInfo<Value>& args)
     Local<Function> cb = Local<Function>::Cast(args[0]);
     const unsigned argc = 1;
     Local<Value> argv[argc] = { String::NewFromUtf8(isolate, "hello world") };
-    cb->Call(isolate->GetCurrentContext()->Global(), argc, argv);
+    cb->Call(isolate->GetCurrentContext(), isolate->GetCurrentContext()->Global(), argc, argv);
 }
 
 void init(Local<Object> exports, Local<Object> module)
@@ -30,11 +30,11 @@ void init(Local<Object> exports, Local<Object> module)
     NODE_SET_METHOD(exports, "runCallback", RunCallback);
 
     Local<Object> global = isolate->GetCurrentContext()->Global();
-    Local<Object> console = global->Get(String::NewFromUtf8(isolate, "console"))->ToObject();
+    Local<Object> console = global->Get(String::NewFromUtf8(isolate, "console"))->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
     Local<Function> log = Local<Function>::Cast(console->Get(String::NewFromUtf8(isolate, "log")));
     Local<Value> argv[3] = { module, String::NewFromUtf8(isolate, "---"), exports };
 
-    log->Call(console, 3, argv);
+    log->Call(isolate->GetCurrentContext(), console, 3, argv);
 }
 
 NODE_MODULE(addon, init)

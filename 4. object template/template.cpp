@@ -19,6 +19,9 @@ void Constructor(const FunctionCallbackInfo<Value>& args)
 {
     Isolate* isolate = args.GetIsolate();
     args.This()->Set(String::NewFromUtf8(isolate, "value"), Number::New(isolate, 233));
+    Local<Object> arg1 = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+    args.This()->Set(String::NewFromUtf8(isolate, "argObj"), arg1);
+    // Number::Cast(arg1);
     return args.GetReturnValue().Set(args.This());
 }
 
@@ -44,7 +47,7 @@ void Init(Local<Object> exports)
     Local<ObjectTemplate> proto = tpl->PrototypeTemplate();
     proto->Set(String::NewFromUtf8(isolate, "get"), FunctionTemplate::New(isolate, ClassGet));
 
-    exports->Set(String::NewFromUtf8(isolate, "TestClass"), tpl->GetFunction());
+    exports->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "TestClass"), tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
     // 作为对象模板创建对象
     Local<FunctionTemplate> fun = FunctionTemplate::New(isolate);
@@ -54,9 +57,9 @@ void Init(Local<Object> exports)
     Local<Array> array = Array::New(isolate, 10);
     for(int i = 0; i < 10; i++)
     {
-        array->Set(Number::New(isolate, i), obj_tpl->NewInstance());
+        array->Set(isolate->GetCurrentContext(), Number::New(isolate, i), obj_tpl->NewInstance(isolate->GetCurrentContext()).ToLocalChecked());
     }
-    exports->Set(String::NewFromUtf8(isolate, "array"), array);
+    exports->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "array"), array);
 
     // 设置函数体
     Local<ObjectTemplate> obj_with_func_tpl = ObjectTemplate::New(isolate);
@@ -65,7 +68,7 @@ void Init(Local<Object> exports)
     obj_with_func_tpl->Set(String::NewFromUtf8(isolate, "dog"),
             String::NewFromUtf8(isolate, "蛋花汤"));
     obj_with_func_tpl->SetCallAsFunctionHandler(Func);
-    exports->Set(String::NewFromUtf8(isolate, "func"), obj_with_func_tpl->NewInstance());
+    exports->Set(String::NewFromUtf8(isolate, "func"), obj_with_func_tpl->NewInstance(isolate->GetCurrentContext()).ToLocalChecked());
 }
 
 NODE_MODULE(_template, Init)
