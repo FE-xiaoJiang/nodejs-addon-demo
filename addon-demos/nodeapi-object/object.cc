@@ -5,8 +5,9 @@ Napi::Object MyObject::Init(Napi::Env env, Napi::Object exports) {
       DefineClass(env,
                   "MyObject",
                   {InstanceMethod("plusOne", &MyObject::PlusOne),
-                   InstanceMethod("value", &MyObject::GetValue),
-                   InstanceMethod("multiply", &MyObject::Multiply)});
+                   InstanceMethod("value", &MyObject::GetValue)
+                  //  InstanceMethod("multiply", &MyObject::Multiply)
+                   });
 
   Napi::FunctionReference* constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
@@ -43,16 +44,16 @@ Napi::Value MyObject::PlusOne(const Napi::CallbackInfo& info) {
   return MyObject::GetValue(info);
 }
 
-Napi::Value MyObject::Multiply(const Napi::CallbackInfo& info) {
-  Napi::Number multiple;
-  if (info.Length() <= 0 || !info[0].IsNumber()) {
-    multiple = Napi::Number::New(info.Env(), 1);
-  } else {
-    multiple = info[0].As<Napi::Number>();
-  }
+// Napi::Value MyObject::Multiply(const Napi::CallbackInfo& info) {
+//   Napi::Number multiple;
+//   if (info.Length() <= 0 || !info[0].IsNumber()) {
+//     multiple = Napi::Number::New(info.Env(), 1);
+//   } else {
+//     multiple = info[0].As<Napi::Number>();
+//   }
 
-  Napi::Object obj = info.Env().GetInstanceData<Napi::FunctionReference>()->New(
-      {Napi::Number::New(info.Env(), this->value_ * multiple.DoubleValue())});
+//   Napi::Object obj = info.Env().GetInstanceData<Napi::FunctionReference>()->New(
+//       {Napi::Number::New(info.Env(), this->value_ * multiple.DoubleValue())});
 
-  return obj;
-}
+//   return obj;
+// }
